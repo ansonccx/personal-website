@@ -37,7 +37,7 @@ function renderProjects(projects) {
 
   projectList.innerHTML = "";
 
-  projects.forEach((project) => {
+  projects.forEach((project, index) => {
     const article = document.createElement("article");
     article.className = "card";
 
@@ -45,12 +45,21 @@ function renderProjects(projects) {
     const safeTitle = project.title?.trim() || "未命名项目";
     const safeDescription = project.description?.trim() || "暂无描述。";
     const safeLink = project.project_url?.trim() || "";
+    const displayIndex = String(index + 1).padStart(2, "0");
 
     article.innerHTML = `
-      <p class="card-tag">${safeTag}</p>
-      <h3>${safeTitle}</h3>
-      <p>${safeDescription}</p>
-      ${safeLink ? `<a class="card-link" href="${safeLink}" target="_blank" rel="noreferrer">查看项目</a>` : ""}
+      <div class="card-header">
+        <p class="card-tag">${safeTag}</p>
+        <span class="card-index">${displayIndex}</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">${safeTitle}</h3>
+        <p class="card-description">${safeDescription}</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-status">Project Published</span>
+        ${safeLink ? `<a class="card-link" href="${safeLink}" target="_blank" rel="noreferrer">查看项目</a>` : `<span class="card-link">项目整理中</span>`}
+      </div>
     `;
 
     projectList.appendChild(article);
