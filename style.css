@@ -470,22 +470,6 @@ main {
   font-size: 1rem;
 }
 
-.project-guide {
-  margin-bottom: 22px;
-  padding: 18px 20px;
-  border-radius: 20px;
-  border: 1px dashed var(--line);
-  background: rgba(66, 217, 255, 0.04);
-}
-
-.project-guide-title {
-  margin: 0 0 8px;
-  color: var(--accent);
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
 .cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
