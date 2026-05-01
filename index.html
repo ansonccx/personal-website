@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=2" />
+    <link rel="stylesheet" href="style.css?v=3" />
   </head>
   <body>
     <div class="page-shell">
@@ -115,24 +115,21 @@
           </div>
           <div class="project-intro">
             <p>
-              目前我还在准备自己的项目内容，所以这里先用静态展示的方式整理方向。后面有了正式项目后，我会继续把它们补充到这个页面里。
+              这里会自动读取我在后台维护的项目内容。登录后台后新增、编辑或删除项目，首页会同步展示最新版本。
+            </p>
+          </div>
+          <div class="project-guide">
+            <p class="project-guide-title">项目维护说明</p>
+            <p>
+              正式版后台启用后，我会从 Supabase 管理这些项目卡片。
+              如果后台还没配置完成，首页会先显示默认占位内容。
             </p>
           </div>
           <div class="cards" id="project-list">
             <article class="card">
-              <p class="card-tag">COMING SOON</p>
-              <h3>未来项目会展示在这里</h3>
-              <p>你后续可以把学习作品、页面练习、案例整理或任何想公开展示的内容加到这里。</p>
-            </article>
-            <article class="card">
-              <p class="card-tag">LEARNING PATH</p>
-              <h3>AI 学习记录</h3>
-              <p>例如提示词实践、数据标注经验、模型理解过程，或你自己总结的方法论。</p>
-            </article>
-            <article class="card">
-              <p class="card-tag">NEXT STEP</p>
-              <h3>持续补充内容</h3>
-              <p>先让网站成为一个稳定入口，后续项目成熟后再逐步替换和扩展内容。</p>
+              <p class="card-tag">LOADING</p>
+              <h3>正在读取项目内容</h3>
+              <p>如果这是第一次配置后台，稍后会先显示默认占位项目。</p>
             </article>
           </div>
         </section>
@@ -156,10 +153,13 @@
       </main>
 
       <footer class="footer">
-        <p>© <span id="year"></span> 陈灿旭 Anson. Built with HTML, CSS and JavaScript.</p>
+        <p>
+          © <span id="year"></span> 陈灿旭 Anson. Built with HTML, CSS and JavaScript.
+          <a class="footer-admin-link" href="./admin.html">后台管理</a>
+        </p>
       </footer>
     </div>
 
-    <script src="script.js?v=2"></script>
+    <script type="module" src="script.js?v=3"></script>
   </body>
 </html>
