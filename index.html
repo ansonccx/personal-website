@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>陈灿旭 | Anson 的个人网站</title>
+    <meta
+      name="description"
+      content="陈灿旭 Anson 的个人网站，用来展示个人介绍、项目计划和联系方式。"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="nav">
+        <a class="brand" href="#top">ANSON</a>
+        <div class="nav-links">
+          <a href="#about">关于我</a>
+          <a href="#projects">项目</a>
+          <a href="#contact">联系</a>
+        </div>
+      </nav>
+
+      <section class="hero-content" id="top">
+        <p class="eyebrow">PERSONAL WEBSITE</p>
+        <h1>陈灿旭 · Anson 的个人网站</h1>
+        <p class="intro">
+          我来自广东茂名，正在成为一个 AI 训练师，也在一步一步搭建属于自己的线上主页。
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#projects">看看我的项目</a>
+          <a class="button ghost" href="#contact">联系我</a>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="panel" id="about">
+        <div class="section-heading">
+          <p class="section-label">01</p>
+          <h2>关于我</h2>
+        </div>
+        <div class="two-column">
+          <p>
+            你好，我是陈灿旭，英文名是 Anson。现在我正在学习并成长为一名 AI
+            训练师，希望把自己的学习过程、作品积累和未来计划都整理到这个网站里。
+            目前网站先从一个干净、简洁的版本开始，后面可以继续慢慢丰富。
+          </p>
+          <ul class="info-list">
+            <li><span>来自</span><strong>广东茂名</strong></li>
+            <li><span>方向</span><strong>AI 训练师</strong></li>
+            <li><span>状态</span><strong>持续学习与建设中</strong></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="panel accent" id="projects">
+        <div class="section-heading">
+          <p class="section-label">02</p>
+          <h2>项目展示</h2>
+        </div>
+        <div class="cards" id="project-list">
+          <article class="card">
+            <p class="card-tag">COMING SOON</p>
+            <h3>未来项目会展示在这里</h3>
+            <p>
+              你后续可以把学习中的作品、练习页面、案例整理或任何你想公开展示的内容加到这里。
+            </p>
+          </article>
+          <article class="card">
+            <p class="card-tag">LEARNING PATH</p>
+            <h3>AI 学习记录</h3>
+            <p>
+              比如你可以添加自己在提示词、数据标注、模型理解、工具使用方面的学习成果。
+            </p>
+          </article>
+          <article class="card">
+            <p class="card-tag">NEXT STEP</p>
+            <h3>持续补充内容</h3>
+            <p>
+              现在先把网站搭起来，后面有了项目之后再逐步补充，会比等“准备好了再开始”更轻松。
+            </p>
+          </article>
+        </div>
+        <section class="project-manager">
+          <div class="section-heading compact">
+            <p class="section-label">UPLOAD READY</p>
+            <h3>添加你的项目</h3>
+          </div>
+          <p class="manager-note">
+            这里是给你预留的“上传功能”。你可以直接在网页里填写项目内容并保存到当前浏览器。
+            这是纯前端方案，适合先在 GitHub Pages 上使用，不需要额外服务器。
+          </p>
+          <form class="project-form" id="project-form">
+            <label>
+              项目标题
+              <input id="project-title" name="title" type="text" placeholder="例如：我的第一个 AI 学习项目" required />
+            </label>
+            <label>
+              项目标签
+              <input id="project-tag" name="tag" type="text" placeholder="例如：AI / WEBSITE / NOTE" />
+            </label>
+            <label>
+              项目描述
+              <textarea
+                id="project-description"
+                name="description"
+                rows="4"
+                placeholder="简单写一下这个项目是做什么的。"
+                required
+              ></textarea>
+            </label>
+            <label>
+              项目链接
+              <input id="project-link" name="link" type="url" placeholder="https://example.com" />
+            </label>
+            <div class="form-actions">
+              <button class="button primary" type="submit">保存项目</button>
+              <button class="button ghost" id="clear-projects" type="button">清空我添加的项目</button>
+            </div>
+          </form>
+        </section>
+      </section>
+
+      <section class="panel" id="contact">
+        <div class="section-heading">
+          <p class="section-label">03</p>
+          <h2>联系我</h2>
+        </div>
+        <div class="contact-box">
+          <p>
+            你可以在这里放邮箱、GitHub、微信公众号、X、Bilibili 或其他社交链接。
+          </p>
+          <div class="contact-links">
+            <a href="mailto:chansonccx@outlook.com">chansonccx@outlook.com</a>
+            <a href="https://github.com/ansonccx" target="_blank" rel="noreferrer"
+              >GitHub</a
+            >
+          </div>
+          <button class="button primary" id="theme-toggle" type="button">
+            切换配色
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> 陈灿旭 Anson. Built with HTML, CSS and JavaScript.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
