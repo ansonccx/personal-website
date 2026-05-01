@@ -1,9 +1,9 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-import { appConfig, hasSupabaseConfig, supabaseConfig } from "./supabase-config.js?v=1";
-
 const yearElement = document.querySelector("#year");
 const themeToggle = document.querySelector("#theme-toggle");
 const projectList = document.querySelector("#project-list");
+
+const supabaseGlobal = window.supabase;
+const supabaseProjectConfig = window.__SUPABASE_CONFIG__ || {};
 
 const fallbackProjects = [
   {
@@ -25,6 +25,10 @@ const fallbackProjects = [
     project_url: "https://github.com/ansonccx"
   }
 ];
+
+function hasSupabaseConfig() {
+  return Boolean(supabaseGlobal && supabaseProjectConfig.url && supabaseProjectConfig.anonKey);
+}
 
 function renderProjects(projects) {
   if (!projectList) {
@@ -59,9 +63,13 @@ async function loadProjects() {
     return;
   }
 
-  const supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey);
-  const { data, error } = await supabase
-    .from(appConfig.projectsTable)
+  const client = supabaseGlobal.createClient(
+    supabaseProjectConfig.url,
+    supabaseProjectConfig.anonKey
+  );
+
+  const { data, error } = await client
+    .from(supabaseProjectConfig.projectsTable)
     .select("tag, title, description, project_url")
     .eq("is_published", true)
     .order("display_order", { ascending: true })

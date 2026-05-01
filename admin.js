@@ -1,5 +1,5 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-import { appConfig, hasSupabaseConfig, supabaseConfig } from "./supabase-config.js?v=1";
+const supabaseLibrary = window.supabase;
+const supabaseProjectConfig = window.__SUPABASE_CONFIG__ || {};
 
 const configWarning = document.querySelector("#config-warning");
 const loginCard = document.querySelector("#login-card");
@@ -14,8 +14,17 @@ const projectAdminList = document.querySelector("#project-admin-list");
 const editorTitle = document.querySelector("#editor-title");
 const cancelEditButton = document.querySelector("#cancel-edit-button");
 
-let supabase = null;
+let supabaseClient = null;
 let editingProjectId = null;
+
+function hasSupabaseConfig() {
+  return Boolean(
+    supabaseLibrary &&
+      supabaseProjectConfig.url &&
+      supabaseProjectConfig.anonKey &&
+      supabaseProjectConfig.projectsTable
+  );
+}
 
 function setMessage(element, message, isError = false) {
   if (!element) {
@@ -133,8 +142,8 @@ function renderProjects(projects) {
         return;
       }
 
-      const { error } = await supabase
-        .from(appConfig.projectsTable)
+      const { error } = await supabaseClient
+        .from(supabaseProjectConfig.projectsTable)
         .delete()
         .eq("id", project.id);
 
@@ -156,8 +165,8 @@ function renderProjects(projects) {
 }
 
 async function loadProjects() {
-  const { data, error } = await supabase
-    .from(appConfig.projectsTable)
+  const { data, error } = await supabaseClient
+    .from(supabaseProjectConfig.projectsTable)
     .select("*")
     .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
@@ -178,7 +187,7 @@ async function handleLogin(event) {
 
   setMessage(loginMessage, "正在登录...");
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabaseClient.auth.signInWithPassword({
     email,
     password
   });
@@ -211,12 +220,12 @@ async function handleSaveProject(event) {
   let result;
 
   if (editingProjectId) {
-    result = await supabase
-      .from(appConfig.projectsTable)
+    result = await supabaseClient
+      .from(supabaseProjectConfig.projectsTable)
       .update(payload)
       .eq("id", editingProjectId);
   } else {
-    result = await supabase.from(appConfig.projectsTable).insert(payload);
+    result = await supabaseClient.from(supabaseProjectConfig.projectsTable).insert(payload);
   }
 
   if (result.error) {
@@ -237,14 +246,17 @@ async function init() {
     return;
   }
 
-  supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey);
+  supabaseClient = supabaseLibrary.createClient(
+    supabaseProjectConfig.url,
+    supabaseProjectConfig.anonKey
+  );
 
   configWarning?.classList.add("hidden");
   loginCard?.classList.remove("hidden");
 
   const {
     data: { session }
-  } = await supabase.auth.getSession();
+  } = await supabaseClient.auth.getSession();
 
   if (session) {
     showLoggedInUI();
@@ -258,7 +270,7 @@ async function init() {
   cancelEditButton?.addEventListener("click", resetEditor);
 
   logoutButton?.addEventListener("click", async () => {
-    await supabase.auth.signOut();
+    await supabaseClient.auth.signOut();
     resetEditor();
     showLoggedOutUI();
   });

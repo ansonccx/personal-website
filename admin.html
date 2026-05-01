@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=3" />
-    <link rel="stylesheet" href="admin.css?v=1" />
+    <link rel="stylesheet" href="style.css?v=4" />
+    <link rel="stylesheet" href="admin.css?v=2" />
   </head>
   <body class="admin-body">
     <div class="page-shell">
@@ -39,7 +39,7 @@
         </header>
 
         <section class="panel admin-grid">
-          <section class="admin-card" id="config-warning">
+          <section class="admin-card hidden" id="config-warning">
             <p class="section-label">SETUP</p>
             <h2>还没有连接 Supabase</h2>
             <p>
@@ -122,6 +122,8 @@
       </main>
     </div>
 
-    <script type="module" src="admin.js?v=1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js?v=2"></script>
+    <script src="admin.js?v=2"></script>
   </body>
 </html>
