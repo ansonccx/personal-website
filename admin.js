@@ -1,5 +1,6 @@
 const supabaseLibrary = window.supabase;
 const supabaseProjectConfig = window.__SUPABASE_CONFIG__ || {};
+const AUTH_STORAGE_KEY = "anson-admin-auth";
 
 const configWarning = document.querySelector("#config-warning");
 const loginCard = document.querySelector("#login-card");
@@ -8,6 +9,7 @@ const listCard = document.querySelector("#list-card");
 const logoutButton = document.querySelector("#logout-button");
 const loginForm = document.querySelector("#login-form");
 const loginMessage = document.querySelector("#login-message");
+const rememberLoginInput = document.querySelector("#remember-login");
 const projectForm = document.querySelector("#project-form");
 const projectMessage = document.querySelector("#project-message");
 const projectAdminList = document.querySelector("#project-admin-list");
@@ -24,6 +26,75 @@ function hasSupabaseConfig() {
       supabaseProjectConfig.anonKey &&
       supabaseProjectConfig.projectsTable
   );
+}
+
+function createStorageAdapter(storage) {
+  return {
+    getItem(key) {
+      return storage.getItem(key);
+    },
+    setItem(key, value) {
+      storage.setItem(key, value);
+    },
+    removeItem(key) {
+      storage.removeItem(key);
+    }
+  };
+}
+
+function buildSupabaseClient(rememberSession) {
+  const storage = rememberSession ? window.localStorage : window.sessionStorage;
+
+  return supabaseLibrary.createClient(supabaseProjectConfig.url, supabaseProjectConfig.anonKey, {
+    auth: {
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      persistSession: true,
+      storage: createStorageAdapter(storage),
+      storageKey: AUTH_STORAGE_KEY
+    }
+  });
+}
+
+function clearStoredAuthState() {
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  window.sessionStorage.removeItem(AUTH_STORAGE_KEY);
+}
+
+async function configureClient(rememberSession) {
+  supabaseClient = buildSupabaseClient(rememberSession);
+
+  if (rememberLoginInput) {
+    rememberLoginInput.checked = rememberSession;
+  }
+
+  return supabaseClient;
+}
+
+async function restoreExistingSession() {
+  const rememberedClient = buildSupabaseClient(true);
+  const rememberedSessionResult = await rememberedClient.auth.getSession();
+
+  if (rememberedSessionResult.data.session) {
+    supabaseClient = rememberedClient;
+
+    if (rememberLoginInput) {
+      rememberLoginInput.checked = true;
+    }
+
+    return rememberedSessionResult.data.session;
+  }
+
+  const sessionClient = buildSupabaseClient(false);
+  const sessionResult = await sessionClient.auth.getSession();
+
+  supabaseClient = sessionClient;
+
+  if (rememberLoginInput) {
+    rememberLoginInput.checked = false;
+  }
+
+  return sessionResult.data.session;
 }
 
 function setMessage(element, message, isError = false) {
@@ -184,6 +255,10 @@ async function handleLogin(event) {
 
   const email = document.querySelector("#login-email").value.trim();
   const password = document.querySelector("#login-password").value;
+  const rememberSession = rememberLoginInput?.checked ?? false;
+
+  clearStoredAuthState();
+  await configureClient(rememberSession);
 
   setMessage(loginMessage, "正在登录...");
 
@@ -193,6 +268,8 @@ async function handleLogin(event) {
   });
 
   if (error) {
+    clearStoredAuthState();
+    await configureClient(false);
     setMessage(loginMessage, error.message, true);
     return;
   }
@@ -238,6 +315,18 @@ async function handleSaveProject(event) {
   await loadProjects();
 }
 
+async function handleLogout() {
+  try {
+    await supabaseClient?.auth.signOut();
+  } finally {
+    clearStoredAuthState();
+    await configureClient(false);
+    resetEditor();
+    showLoggedOutUI();
+    setMessage(loginMessage, "");
+  }
+}
+
 async function init() {
   if (!hasSupabaseConfig()) {
     configWarning?.classList.remove("hidden");
@@ -246,17 +335,10 @@ async function init() {
     return;
   }
 
-  supabaseClient = supabaseLibrary.createClient(
-    supabaseProjectConfig.url,
-    supabaseProjectConfig.anonKey
-  );
-
   configWarning?.classList.add("hidden");
   loginCard?.classList.remove("hidden");
 
-  const {
-    data: { session }
-  } = await supabaseClient.auth.getSession();
+  const session = await restoreExistingSession();
 
   if (session) {
     showLoggedInUI();
@@ -268,12 +350,7 @@ async function init() {
   loginForm?.addEventListener("submit", handleLogin);
   projectForm?.addEventListener("submit", handleSaveProject);
   cancelEditButton?.addEventListener("click", resetEditor);
-
-  logoutButton?.addEventListener("click", async () => {
-    await supabaseClient.auth.signOut();
-    resetEditor();
-    showLoggedOutUI();
-  });
+  logoutButton?.addEventListener("click", handleLogout);
 }
 
 init();
